@@ -18,9 +18,9 @@ golem::fill_desc(
   pkg_title = "SNAPSHOOTHER", # The Title of the package containing the App 
   pkg_description = "A shiny app for take snapshoots from one or two webcams. It allows to label the images and save them in the train-validation-test folder structure.", # The Description of the package containing the App 
   author_first_name = "Marcelo", # Your First Name
-  author_last_name = "ALID-VACCAREZZA", # Your Last Name
+  author_last_name = "Alid-Vaccarezza", # Your Last Name
   author_email = "maalid@gmail.com", # Your Email
-  repo_url = NULL # The URL of the GitHub Repo (optional) 
+  repo_url = "https://github.com/maalid/snapShooteR" # The URL of the GitHub Repo (optional) 
 )     
 
 ## Set {golem} options ----
@@ -47,7 +47,7 @@ golem::use_recommended_deps()
 ## Favicon ----
 # If you want to change the favicon (default is golem's one)
 golem::remove_favicon()
-golem::use_favicon() # path = "path/to/ico". Can be an online file. 
+golem::use_favicon("inst/app/www/AI_UBB_Logo_grey.ico") # path = "path/to/ico". Can be an online file. 
 
 ## Add helper functions ----
 golem::use_utils_ui()

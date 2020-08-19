@@ -1,13 +1,34 @@
 Package: snapShooteR
 Title: SNAPSHOOTHER
 Version: 0.0.0.9000
-Authors@R: person('Marcelo', 'ALID-VACCAREZZA', email = 'maalid@gmail.com', role = c('cre', 'aut'))
+Authors@R: person('Marcelo', 'Alid-Vaccarezza', email = 'maalid@gmail.com', role = c('cre', 'aut'))
 Description: A shiny app for take snapshoots from one or two webcams. It allows to label the images and save them in the train-validation-test folder structure.
 License: MIT + file LICENSE
 Imports: 
     config,
     golem,
-    shiny
+    shiny,
+    processx,
+    attempt,
+    DT,
+    glue,
+    htmltools,
+    shinythemes,
+    shinyWidgets,
+    shinyjs,
+    base64enc,
+    stringr,
+    reticulate,
+    readr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.0
+Suggests: 
+    testthat,
+    knitr,
+    rmarkdown
+Depends: 
+    R (>= 2.10)
+VignetteBuilder: knitr
+URL: https://github.com/maalid/snapShooteR
+BugReports: https://github.com/maalid/snapShooteR/issues
