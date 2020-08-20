@@ -172,16 +172,16 @@ app_ui <- function(request) {
       shinyjs::extendShinyjs(text = jscode, functions = c("closeWindow")),
       
       # Titulo App ----
-      shiny::navbarPage(div("CLASSIFBox ",
+      shiny::navbarPage(div("snapShooteR ",
                      
                      span(style = "font-size: 18px;
                                  color: grey;",
                           "by AiLab UBB")),
-                 windowTitle = HTML("CLASSIFBox"),
+                 windowTitle = HTML("snapShooteR"),
                  id = "navbar",
                  
                  # TAB: Captura de Imagenes ----
-                 shiny::tabPanel("Captura de Imagenes",
+                 shiny::tabPanel("",
                                  shiny::titlePanel("Capturing Images"),
                                  shiny::sidebarLayout(
                                    shiny::sidebarPanel(
@@ -445,13 +445,16 @@ app_ui <- function(request) {
                                      
                               )
                             )
-                          )),
+                          )
+                        )
+                 ,
                  
                  # Espacios en blanco en encabezado ----
                  tags$head(tags$script(type="text/javascript", src = "code.js")),
                  tags$head(tags$style(HTML('.navbar-brand {width: 400px; font-size:35px; text-align:center;}'))),
                  
                  shiny::tabPanel(title = "", value = "Stop", icon = icon("power-off"))
+                 
                  
       )
     )
@@ -480,7 +483,7 @@ golem_add_external_resources <- function(){
     ),
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
-    # reticulate::py_run_file(system.file("app/python/webcamSettings.py", package = "snapShooteR"))
+    
   )
 }
 
