@@ -91,8 +91,6 @@ showWebcam2 <- function(cameraWidth, cameraHeight, cameraQuality){
   )
 }
 
-
-
 jscode <- "shinyjs.closeWindow = function() { window.close(); }"
 
 app_ui <- function(request) {
@@ -119,19 +117,19 @@ app_ui <- function(request) {
              } );
            }
          </script>'),
-      
-      
-      # Funcion take_BurstSnapshot ----    
+
+
+      # Funcion take_BurstSnapshot ----
       HTML('<script language="JavaScript">
                     var timer = null;
-    
+
                     function take_BurstSnapshot(){
                         // take snapshot and get image data
                         Webcam.snap( function(data_uri) {
                             // display results in page
                             var img = new Image();
                             img.src = data_uri;
-    
+
                             document.getElementById(\'results\').appendChild( img );
                             document.getElementById(\'imageprev\').src = data_uri;
                             Shiny.setInputValue("burstplaceholder64", data_uri)
@@ -140,42 +138,61 @@ app_ui <- function(request) {
                             // display results in page
                             var img2 = new Image();
                             img2.src = data_uri;
-    
+
                             document.getElementById(\'results2\').appendChild( img2 );
                             document.getElementById(\'imageprev2\').src = data_uri;
                             Shiny.setInputValue("burstplaceholder642", data_uri)
                         } );
                     }
-    
+
                     function start_snapping() {
                         if (!timer) {
                             take_BurstSnapshot();
                             timer = setInterval( take_BurstSnapshot, 1500 );
                         }
                     }
-                    
+
                     function stop_snapping() {
                         if (timer) {
                             clearTimeout( timer );
                             timer = null;
                         }
                     }
-                    
+
                     function erase_snaps() {
                         document.getElementById(\'results\').innerHTML = \'\';
                         document.getElementById(\'results2\').innerHTML = \'\';
                     }
-           
+
          </script>'),
       
       # Codigo js para cerrar app ----
       shinyjs::extendShinyjs(text = jscode, functions = c("closeWindow")),
       
+      
+        # tags$head(tags$style(HTML("
+        #                    .navbar-nav {
+        #                    float: none !important;
+        #                    }
+        #                    .navbar-nav > li:nth-child(2) {
+        #                    float: right;
+        #                    }
+        #                    .navbar-brand {
+        #                    width: 400px; 
+        #                    font-size:35px; 
+        #                    text-align:center;
+        #                    }
+        #                    
+        #                    "))),
+      
       # Titulo App ----
-      shiny::navbarPage(div("snapShooteR ",
+      shiny::navbarPage(div(style = "width: 400px; 
+                                     font-size:35px; 
+                                     text-align:center;",
+                            "snapShooteR ",
                      
                      span(style = "font-size: 18px;
-                                 color: grey;",
+                                   color: grey;",
                           "by AiLab UBB")),
                  windowTitle = HTML("snapShooteR"),
                  id = "navbar",
@@ -450,12 +467,17 @@ app_ui <- function(request) {
                  ,
                  
                  # Espacios en blanco en encabezado ----
-                 tags$head(tags$script(type="text/javascript", src = "code.js")),
-                 tags$head(tags$style(HTML('.navbar-brand {width: 400px; font-size:35px; text-align:center;}'))),
+                 # tags$head(tags$script(type="text/javascript", src = "code.js")),
+                 # tags$head(tags$script(type="text/javascript", src = "code.js")),
+                 # tags$head(tags$script(type="text/javascript", src = "code.js")),
+                 # tags$head(tags$script(type="text/javascript", src = "code.js")),
+                 
+                 # Estilo para los tags
+                 # tags$head(tags$style(HTML('.navbar-brand {width: 400px; font-size:35px; text-align:center;}'))),
                  
                  shiny::tabPanel(title = "", value = "Stop", icon = icon("power-off"))
                  
-                 
+                
       )
     )
   )
@@ -476,6 +498,14 @@ golem_add_external_resources <- function(){
   )
  
   tags$head(
+    tags$style(HTML("
+                     .navbar-nav {
+                     float: none !important;
+                     }
+                     .navbar-nav > li:nth-child(2) {
+                     float: right;
+                     }
+                    ")),
     favicon(),
     bundle_resources(
       path = app_sys('app/www'),
