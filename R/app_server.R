@@ -12,6 +12,13 @@ app_server <- function( input, output, session ) {
   #   py$cam1Settings()
   # })
   
+  observeEvent(input$cam1Settings, {
+    shell("C: & cd C:/Users/Admin/Downloads/webcam-settings-dialog-windows-master & launchCam1.bat")
+  })
+  observeEvent(input$cam2Settings, {
+    shell("C: & cd C:/Users/Admin/Downloads/webcam-settings-dialog-windows-master & launchCam2.bat")
+  })
+  
   # para ver cambios en github
   
   # CREAR FOLDERS ASOCIADOS A UN EXPERIMENTO ----     

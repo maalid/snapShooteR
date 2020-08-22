@@ -95,7 +95,8 @@ jscode <- "shinyjs.closeWindow = function() { window.close(); }"
 
 app_ui <- function(request) {
   
-  reticulate::py_run_file(system.file("app/python/webcamSettings.py", package = "snapShooteR"))
+  # reticulate::py_run_file(system.file("app/python/webcamSettings.py", package = "snapShooteR"))
+  # shell("C: & cd C:/Users/Admin/Downloads/webcam-settings-dialog-windows-master & launchCam1.bat")
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
@@ -214,27 +215,27 @@ app_ui <- function(request) {
                                   shiny::actionButton(inputId = "CrearExperimento", 
                                                label = "Crear",
                                                style = "background-color: black;
-                                                          font-family: sans serif;
-                                                          font-size: 15px;
-                                                          color: white;
-                                                          box-shadow: 5px 5px 5px grey;
-                                                          border-radius: 5px",
+                                                        font-family: sans serif;
+                                                        font-size: 15px;
+                                                        color: white;
+                                                        box-shadow: 5px 5px 5px grey;
+                                                        border-radius: 5px",
                                                size = "sm"),
                                   
                                   span(style = "font-size: 13px; 
-                                                  color: black;
-                                                  text-shadow: 2px 2px 5px black;",
+                                                color: black;
+                                                text-shadow: 2px 2px 5px black;",
                                        " -- "),
                                   
                                   # Boton para crear nuevo experimento ----
                                   shinyjs::disabled(shiny::actionButton(inputId = "NuevoExperimento", 
                                                         label = "Nuevo",
                                                         style = "background-color: black;
-                                                                   font-family: sans serif;
-                                                                   font-size: 15px;
-                                                                   color: white;
-                                                                   box-shadow: 5px 5px 5px grey;
-                                                                   border-radius: 5px",
+                                                                 font-family: sans serif;
+                                                                 font-size: 15px;
+                                                                 color: white;
+                                                                 box-shadow: 5px 5px 5px grey;
+                                                                 border-radius: 5px",
                                                         size = "sm")
                                   ),
                                   
@@ -257,30 +258,30 @@ app_ui <- function(request) {
                                   shiny::actionButton(inputId = "BurstSnapshot", 
                                                label = "",
                                                style = "background-color: black; 
-                                                          font-family: sans serif; 
-                                                          font-size: 35px; 
-                                                          color: white;
-                                                          box-shadow: 5px 5px 5px grey;
-                                                          border-radius: 15px",
+                                                        font-family: sans serif; 
+                                                        font-size: 35px; 
+                                                        color: white;
+                                                        box-shadow: 5px 5px 5px grey;
+                                                        border-radius: 15px",
                                                icon = icon("images"),
                                                size = "lg",
                                                onclick = "start_snapping()"),
                                   
                                   
                                   span(style = "font-size: 13px; 
-                                                  color: black;
-                                                  text-shadow: 2px 2px 5px black;",
+                                                color: black;
+                                                text-shadow: 2px 2px 5px black;",
                                        " -- "),
                                   
                                   # Boton para parar Burst-Snapshot ----
                                   shinyjs::disabled(shiny::actionButton(inputId = "stop_BurstSnapshot", 
                                                         label = "",
                                                         style = "background-color: red; 
-                                                                   font-family: sans serif; 
-                                                                   font-size: 20px; 
-                                                                   color: white;
-                                                                   box-shadow: 5px 5px 5px grey;
-                                                                   border-radius: 10px",
+                                                                 font-family: sans serif; 
+                                                                 font-size: 20px; 
+                                                                 color: white;
+                                                                 box-shadow: 5px 5px 5px grey;
+                                                                 border-radius: 10px",
                                                         icon = icon("stop"),
                                                         size = "sm",
                                                         onclick = "stop_snapping()")
@@ -295,11 +296,11 @@ app_ui <- function(request) {
                                   shinyjs::disabled(shiny::actionButton(inputId = "snapshot", 
                                                         label = "",
                                                         style = "background-color: black; 
-                                                                   font-family: sans serif; 
-                                                                   font-size: 35px; 
-                                                                   color: white;
-                                                                   box-shadow: 5px 5px 5px grey;
-                                                                   border-radius: 15px",
+                                                                 font-family: sans serif; 
+                                                                 font-size: 35px; 
+                                                                 color: white;
+                                                                 box-shadow: 5px 5px 5px grey;
+                                                                 border-radius: 15px",
                                                         icon = icon("camera"),
                                                         size = "lg",
                                                         onclick = "take_snapshot()"))
@@ -310,11 +311,11 @@ app_ui <- function(request) {
                               shiny::column(width = 5,
                                      offset = 1,
                                      
-                                     # actionButton(inputId = "cam1Settings", 
+                                     # actionButton(inputId = "cam1Settings",
                                      #              label = "",
-                                     #              style = "background-color: black; 
-                                     #                             font-family: sans serif; 
-                                     #                             font-size: 35px; 
+                                     #              style = "background-color: black;
+                                     #                             font-family: sans serif;
+                                     #                             font-size: 35px;
                                      #                             color: white;
                                      #                             box-shadow: 5px 5px 5px grey;
                                      #                             border-radius: 15px",
@@ -338,16 +339,36 @@ app_ui <- function(request) {
                                          
                                          align = "center",
                                          
+                                         actionButton(inputId = "cam1Settings",
+                                                      label = "",
+                                                      style = "background-color: transparent;
+                                                               font-family: sans serif;
+                                                               font-size: 15px;
+                                                               color: white;
+                                                               border-radius: 5px",
+                                                      icon = icon("sliders-h"),
+                                                      size = "sm"),
                                          showWebcam(cameraWidth, cameraHeight, cameraQuality),
+                                         
+                                         actionButton(inputId = "cam2Settings",
+                                                          label = "",
+                                                          style = "background-color: transparent;
+                                                                   border-color: grey;
+                                                                   font-family: sans serif;
+                                                                   font-size: 15px;
+                                                                   color: white;
+                                                                   border-radius: 5px",
+                                                          icon = icon("sliders-h"),
+                                                          size = "sm"),
                                          showWebcam2(cameraWidth, cameraHeight, cameraQuality),
                                          
-                                         br(),
+                                         # br(),
                                          
                                          # Campo para ingresar la etiqueta ----
                                          div(align = "center",
                                              style = "color: black; 
-                                                        font-family: sans serif;
-                                                        text-shadow: 3px 3px 4px grey;",
+                                                      font-family: sans serif;
+                                                      text-shadow: 3px 3px 4px grey;",
                                              
                                              shinyjs::disabled(shiny::selectizeInput(inputId = "etiqueta",
                                                                      label = strong("Ingresar Etiqueta"),
@@ -360,31 +381,32 @@ app_ui <- function(request) {
                                              
                                              tags$style(type="text/css",
                                                         "#etiqueta {text-align:center;
-                                                                      font-family: sans serif; 
-                                                                      font-style: italic;
-                                                                      display: block;}")
+                                                                    font-family: sans serif; 
+                                                                    font-style: italic;
+                                                                    display: block;}")
                                          ),
                                          
-                                         br(),
+                                         # br(),
                                          
                                          # Contador para Single-Snapshot y Burst-Snapshot ----
                                          div(align = "center",
                                              style = "color: black;",
                                              shiny::verbatimTextOutput(outputId = "photoCounter"),
                                              tags$style("#photoCounter {text-align: center; 
-                                                                          color: black; 
-                                                                          font-family: sans serif; 
-                                                                          font-size:12px; 
-                                                                          font-style: bold; 
-                                                                          overflow-y: scroll; 
-                                                                          max-height: 80px; 
-                                                                          max-width: 50px; 
-                                                                          background: white;}")
+                                                                        color: black; 
+                                                                        font-family: sans serif; 
+                                                                        font-size:12px; 
+                                                                        font-style: bold; 
+                                                                        overflow-y: scroll; 
+                                                                        max-height: 80px; 
+                                                                        max-width: 70px; 
+                                                                        background: white;
+                                                                        border-radius: 5px}")
                                          ),
                                          
-                                         style = "height:660px;
-                                                    width:290px;
-                                                    background-image: linear-gradient(#000000, #b4b4b4);"
+                                         style = "height:710px;
+                                                  width:290px;
+                                                  background-image: linear-gradient(#000000, #b4b4b4);"
                                      )
                               ),
                               
@@ -422,17 +444,17 @@ app_ui <- function(request) {
                                      div(
                                        br(style = "line-height: 32px;"),
                                        style = "box-shadow: 5px 5px 5px grey;
-                                                    border-radius: 25px;
-                                                    height: 580px;
-                                                    background-image: linear-gradient(#000000, #b4b4b4);",
+                                                border-radius: 25px;
+                                                height: 580px;
+                                                background-image: linear-gradient(#000000, #b4b4b4);",
                                        align = "center",
                                        div(shiny::textOutput(outputId = "labelImagenCam1"),
                                            tags$style("#labelImagenCam1 {text-align: center; 
-                                                                             color: white; 
-                                                                             font-family: sans serif; 
-                                                                             font-size: 15px; 
-                                                                             max-height: 20px; 
-                                                                             max-width: 700px;}")),
+                                                                         color: white; 
+                                                                         font-family: sans serif; 
+                                                                         font-size: 15px; 
+                                                                         max-height: 20px; 
+                                                                         max-width: 700px;}")),
                                        
                                        br(style = "line-height: 12px;"),
                                        
@@ -445,11 +467,11 @@ app_ui <- function(request) {
                                        
                                        div(shiny::textOutput(outputId = "labelImagenCam2"),
                                            tags$style("#labelImagenCam2 {text-align: center; 
-                                                                             color: white; 
-                                                                             font-family: sans serif; 
-                                                                             font-size: 15px; 
-                                                                             max-height: 20px; 
-                                                                             max-width: 700px;}")),
+                                                                         color: white; 
+                                                                         font-family: sans serif; 
+                                                                         font-size: 15px; 
+                                                                         max-height: 20px; 
+                                                                         max-width: 700px;}")),
                                        
                                        br(style = "line-height: 12px;"),
                                        
