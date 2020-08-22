@@ -19,6 +19,35 @@ app_server <- function( input, output, session ) {
     shell("C: & cd C:/Users/Admin/Downloads/webcam-settings-dialog-windows-master & launchCam2.bat")
   })
   
+  observeEvent(input$OnOffCam1, {
+    OnOffCam1Value <- input$OnOffCam1
+    # print(OnOffCam1Value)
+    if (OnOffCam1Value == "TRUE") {
+      output$cam1 <- renderUI({showWebcam(cameraWidth, cameraHeight, cameraQuality)})
+    } else {output$cam1 <- renderUI({webCamOff()})}
+  })
+  # observeEvent(input$OnCam1, {
+  #   output$cam1 <- renderUI({showWebcam(cameraWidth, cameraHeight, cameraQuality)})
+  # })
+  # observeEvent(input$OffCam1, {
+  #   output$cam1 <- renderUI({webCamOff()})
+  # })
+  
+  observeEvent(input$OnOffCam2, {
+    OnOffCam2Value <- input$OnOffCam2
+    # print(OnOffCam2Value)
+    if (OnOffCam2Value == "TRUE") {
+      output$cam2 <- renderUI({showWebcam2(cameraWidth, cameraHeight, cameraQuality)})
+    } else {output$cam2 <- renderUI({webCam2Off()})}
+  })
+  # observeEvent(input$OnCam2, {
+  #   output$cam2 <- renderUI({showWebcam2(cameraWidth, cameraHeight, cameraQuality)})
+  # })
+  # observeEvent(input$OffCam2, {
+  #   output$cam2 <- renderUI({webCam2Off()})
+  # })
+  
+  
   # para ver cambios en github
   
   # CREAR FOLDERS ASOCIADOS A UN EXPERIMENTO ----     
@@ -90,11 +119,19 @@ app_server <- function( input, output, session ) {
   # HABILITAR O DESHABILITAR BOTONES SNAPSHOT DEPENDIENDO DE SI LA ETIQUETA ES VACIO O NO ----
   observe({
     
-    shinyjs::toggleState(id = "BurstSnapshot", 
-                condition = nchar(input$etiqueta) > 0)
+    OnOffCam1Value <- input$OnOffCam1
+    OnOffCam2Value <- input$OnOffCam2
     
-    shinyjs::toggleState(id = "snapshot", 
-                condition = nchar(input$etiqueta) > 0)
+    # shinyjs::toggleState(id = "BurstSnapshot", 
+    #             condition = nchar(input$etiqueta) > 0)
+    
+    # shinyjs::toggleState(id = "snapshot",
+    #             condition = nchar(input$etiqueta) > 0)
+    
+    shinyjs::toggleState(id = "BurstSnapshot",
+                         condition = {nchar(input$etiqueta) > 0 & OnOffCam1Value == "TRUE" & OnOffCam2Value == "TRUE"} )
+    shinyjs::toggleState(id = "snapshot",
+                         condition = {nchar(input$etiqueta) > 0 & OnOffCam1Value == "TRUE" & OnOffCam2Value == "TRUE"} )
     
   })
   
@@ -219,6 +256,13 @@ app_server <- function( input, output, session ) {
       shinyjs::disable(id = "BurstSnapshot")
       shinyjs::disable(id = "snapshot")
       
+      # shinyjs::disable(id = "OnOffCam1")
+      # shinyjs::disable(id = "OnOffCam2")
+      shinyjs::disable(id = "cam1Settings")
+      shinyjs::disable(id = "cam2Settings")
+      
+      shinyjs::disable(id = "etiqueta")
+      
       # Limpiar etiqueta
       photoLabel <- stringr::str_remove_all(input$etiqueta,"[^[:alnum:]]") 
       # photoLabel <- stringr::str_remove_all(photoLabel,'[á é í ó ú ä ë ï ö ü Á É Í Ó Ú Ä Ë Ï Ö Ü]') 
@@ -313,6 +357,13 @@ app_server <- function( input, output, session ) {
     
     shinyjs::enable(id = "BurstSnapshot")
     shinyjs::enable(id = "snapshot")
+    
+    # shinyjs::enable(id = "OnOffCam1")
+    # shinyjs::enable(id = "OnOffCam2")
+    shinyjs::enable(id = "cam1Settings")
+    shinyjs::enable(id = "cam2Settings")
+    
+    shinyjs::enable(id = "etiqueta")
     
     exp_number <- input$experimento
     
