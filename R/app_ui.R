@@ -186,7 +186,6 @@ app_ui <- function(request) {
       # Codigo js para cerrar app ----
       shinyjs::extendShinyjs(text = jscode, functions = c("closeWindow")),
       
-      
         # tags$head(tags$style(HTML("
         #                    .navbar-nav {
         #                    float: none !important;
@@ -202,6 +201,7 @@ app_ui <- function(request) {
         #                    
         #                    "))),
       
+      
       # Titulo App ----
       shiny::navbarPage(div(style = "width: 400px; 
                                      font-size:35px; 
@@ -213,6 +213,7 @@ app_ui <- function(request) {
                                  "by AiLab UBB")),
                         windowTitle = HTML("snapShooteR"),
                         id = "navbar",
+                        
                  
                  # TAB: Captura de Imagenes ----
                  shiny::tabPanel("",
@@ -568,6 +569,7 @@ app_ui <- function(request) {
     )
   )
 }
+
 
 #' Add external Resources to the Application
 #' 
