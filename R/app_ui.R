@@ -5,6 +5,23 @@
 #' @import shiny
 #' @noRd
 
+# ######## shinymanager
+# credentials <- data.frame(
+#   user = c("Luis Vera", "Marcelo Alid"),
+#   password = c("lvera1234", "maalid1234"),
+#   # password will automatically be hashed
+#   admin = c(FALSE, TRUE),
+#   stringsAsFactors = FALSE
+# )
+# 
+# keyring::key_set("R-shinymanager-key", "obiwankenobi")
+# shinymanager::create_db(
+#   credentials_data = credentials,
+#   sqlite_path = "inst/app/db/db.sqlite", # will be created
+#   passphrase = key_get("R-shinymanager-key", "obiwankenobi")
+#   # passphrase = "passphrase_wihtout_keyring"
+# )
+# ######## shinymanager
 
 cameraWidth <- 224
 cameraHeight <- 224
@@ -570,6 +587,8 @@ app_ui <- function(request) {
   )
 }
 
+######## shinymanager
+app_ui <- shinymanager::secure_app(app_ui, enable_admin = TRUE)
 
 #' Add external Resources to the Application
 #' 

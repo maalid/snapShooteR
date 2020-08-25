@@ -12,6 +12,20 @@ app_server <- function( input, output, session ) {
   #   py$cam1Settings()
   # })
   
+  ######## shinymanager
+  # check_credentials directly on sqlite db
+  res_auth <- shinymanager::secure_server(
+    check_credentials = shinymanager::check_credentials(
+      # credentials
+      db = system.file("app/db/db1.sqlite", package = "snapShooteR"),
+      # passphrase = key_get("R-shinymanager-key", "obiwankenobi")
+      passphrase = "passphrase"
+    )
+  )
+  observe({
+    if(is.null(input$shinymanager_where) || (!is.null(input$shinymanager_where) && input$shinymanager_where %in% "application")){
+  ######## shinymanager
+  
   observeEvent(input$cam1Settings, {
     pat <- system.file("app/webcamSettings", package = "snapShooteR")
     shell(glue::glue("C: & cd {pat} & launchCam1.bat"))
@@ -387,5 +401,10 @@ app_server <- function( input, output, session ) {
       stopApp()
     }
   })
-
+  
+  ######## shinymanager
+    }
+  })
+  ######## shinymanager
+  
 }
