@@ -416,7 +416,7 @@ app_ui <- function(request) {
                                                        value = "", 
                                                        width = '500px',
                                                        height = '150px',
-                                                       placeholder = NULL),
+                                                       placeholder = "Escriba aca sus anotaciones"),
                                   # shiny::actionButton(inputId = "saveAnnotations",
                                   #                     label = "",
                                   #                     style = "background-color: black; 

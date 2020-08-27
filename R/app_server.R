@@ -157,6 +157,7 @@ app_server <- function( input, output, session ) {
     shiny::updateSelectInput(session, inputId = "experimento", selected = experimentNumber)
     shiny::updateSelectInput(session, inputId = "setType", selected = "train")
     shiny::updateSelectInput(session, inputId = "etiqueta", selected = "--> etiqueta <--")
+    shiny::updateTextAreaInput(session, inputId = "annotations", label = "Anotaciones", value = "", placeholder = "Escriba aca sus anotaciones")
     
   })
   
@@ -481,7 +482,8 @@ app_server <- function( input, output, session ) {
   })
   
   observe({
-    if (!is.null(input$authStop) && input$authStop == 1) {
+    # if (!is.null(input$authStop) && input$authStop == 1) {
+    if (req(input$authStop) == 1) {
     shinyjs::js$closeWindow()
     stopApp()
     }
