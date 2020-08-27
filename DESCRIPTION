@@ -1,8 +1,8 @@
 Package: snapShooteR
-Title: SNAPSHOOTHER
+Title: Take snaps using up to two webcams
 Version: 0.0.0.9000
 Authors@R: person('Marcelo', 'Alid-Vaccarezza', email = 'maalid@gmail.com', role = c('cre', 'aut'))
-Description: A shiny app for take snapshoots from one or two webcams. It allows to label the images and save them in the train-validation-test folder structure.
+Description: A shiny app for take snapshots from one or two webcams. It allows to label the images and save them in the train-validation-test folder structure.
 License: MIT + file LICENSE
 Imports: 
     config,
