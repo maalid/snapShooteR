@@ -28,11 +28,11 @@ app_server <- function( input, output, session ) {
   
   observeEvent(input$cam1Settings, {
     webcamSettingsPath <- system.file("app/webcamSettings", package = "snapShooteR")
-    shell(glue::glue("C: & cd {webcamSettingsPat} & launchCam1.bat"))
+    shell(glue::glue("C: & cd {webcamSettingsPath} & launchCam1.bat"))
   })
   observeEvent(input$cam2Settings, {
-    webcamSettingsPat <- system.file("app/webcamSettings", package = "snapShooteR")
-    shell(glue::glue("C: & cd {webcamSettingsPat} & launchCam2.bat"))
+    webcamSettingsPath <- system.file("app/webcamSettings", package = "snapShooteR")
+    shell(glue::glue("C: & cd {webcamSettingsPath} & launchCam2.bat"))
     # shell("C: & cd C:/Users/Admin/Downloads/webcam-settings-dialog-windows-master & launchCam2.bat")
   })
   

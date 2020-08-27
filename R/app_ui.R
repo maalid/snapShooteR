@@ -249,7 +249,7 @@ app_ui <- function(request) {
                  
                  # TAB 1: Captura de Imagenes ----
                  shiny::tabPanel("",
-                                 shiny::titlePanel("1. Captura de Imágenes"),
+                                 shiny::titlePanel("1. Captura de Imagenes"),
                                  shiny::sidebarLayout(
                                    
                                    # Sidebar Panel ----
@@ -327,7 +327,7 @@ app_ui <- function(request) {
                                                                             label = "Set",
                                                                             inline = TRUE,
                                                                             choices = c("Entrenamiento" = "train",
-                                                                                        "Validación" = "validation",
+                                                                                        "Validacion" = "validation",
                                                                                         "Test" = "test")
                                                                             )
                                                         )
@@ -399,10 +399,10 @@ app_ui <- function(request) {
                                   shiny::actionButton(inputId = "saveAnnotations",
                                                   label = "",
                                                   style = "background-color: black; 
-                                                               font-family: sans serif;
-                                                               color: white;
-                                                               box-shadow: 5px 5px 5px grey;
-                                                               border-radius: 3px",
+                                                           font-family: sans serif;
+                                                           color: white;
+                                                           box-shadow: 5px 5px 5px grey;
+                                                           border-radius: 3px",
                                                   icon = icon("save"),
                                                   size = "sm")),
                               
@@ -710,20 +710,20 @@ app_ui <- shinymanager::secure_app(app_ui,
                                                        ),
                                    tags_bottom = tags$div(
                                                           actionButton(inputId = "authStop",
-                                                                                label ="",
-                                                                                style = "float: right;
-                                                                                 border-radius: 5px;
-                                                                                 background-color: red;
-                                                                                 border-color: transparent;
-                                                                                 font-size: 10px",
-                                                                                icon = icon("power-off")),
+                                                                       label ="",
+                                                                       style = "float: right;
+                                                                                border-radius: 5px;
+                                                                                background-color: red;
+                                                                                border-color: transparent;
+                                                                                font-size: 10px",
+                                                                       icon = icon("power-off")),
                                                           # tags$style("#authStop {float: right;
                                                           #                        border-radius: 5px;
                                                           #                        background-color: red;
                                                           #                        border-color: transparent;
                                                           #                        font-size: 10px}"),
                                                           tags$p(
-                                                            "Si tienes problemas con la aplicación, envía un mail al ",
+                                                            "Si tienes problemas con la aplicacion, envia un mail al ",
                                                             tags$a(
                                                               href = "mailto:maalid@gmail.com?Subject=snapShooteR%20Manager",
                                                               target="_top", "administrador."
