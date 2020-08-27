@@ -5,7 +5,15 @@
 #' @import shiny
 #' @noRd
 
-# ######## shinymanager
+# shinyManager setLabels ----
+shinymanager::set_labels(
+  language = "en",
+  "Please authenticate" = "",
+  "Username:" = "nombre de usuario:",
+  "Password:" = "clave de acceso:"
+)
+
+# shinyManager credential ----
 # credentials <- data.frame(
 #   user = c("Luis Vera", "Marcelo Alid"),
 #   password = c("lvera1234", "maalid1234"),
@@ -21,8 +29,8 @@
 #   passphrase = key_get("R-shinymanager-key", "obiwankenobi")
 #   # passphrase = "passphrase_wihtout_keyring"
 # )
-# ######## shinymanager
 
+# Global parameters ----
 cameraWidth <- 224
 cameraHeight <- 224
 cameraQuality <- 100
@@ -125,20 +133,25 @@ webCam2Off <- function(){
          </script>')))
 }
 
+# Funcion closeWindow ----
 jscode <- "shinyjs.closeWindow = function() { window.close(); }"
 
+# UI ----
 app_ui <- function(request) {
   
   # reticulate::py_run_file(system.file("app/python/webcamSettings.py", package = "snapShooteR"))
   # shell("C: & cd C:/Users/Admin/Downloads/webcam-settings-dialog-windows-master & launchCam1.bat")
   tagList(
-    # Leave this function for adding external resources
+    
+    # Adding external resources ----
     golem_add_external_resources(),
-    # List the first level UI elements here 
+    
+    # FluidPage ---- 
     fluidPage(
       theme = shinythemes::shinytheme("cosmo"), 
       shinyjs::useShinyjs(),
       
+      # Funcion take_snapshot ----
       HTML('<script language="JavaScript">
          function take_snapshot() {
            // take snapshot and get image data
@@ -219,42 +232,71 @@ app_ui <- function(request) {
         #                    "))),
       
       
-      # Titulo App ----
+      # Head App ----
       shiny::navbarPage(div(style = "width: 400px; 
-                                     font-size:35px; 
+                                     font-size:40px; 
+                                     font-family: sans serif;
                                      text-align:center;",
                             "snapShooteR ",
                      
                             span(style = "font-size: 18px;
+                                          font-family: sans serif;
                                           color: grey;",
                                  "by AiLab UBB")),
                         windowTitle = HTML("snapShooteR"),
                         id = "navbar",
                         
                  
-                 # TAB: Captura de Imagenes ----
+                 # TAB 1: Captura de Imagenes ----
                  shiny::tabPanel("",
-                                 shiny::titlePanel("Capturing Images"),
+                                 shiny::titlePanel("1. Captura de Imágenes"),
                                  shiny::sidebarLayout(
+                                   
+                                   # Sidebar Panel ----
                                    shiny::sidebarPanel(
+                                     
+                                     # Boton para elegir directorio de trabajo ----
+                                     div(align = "center",
+                                         shinyFiles::shinyDirButton(id = "directory", 
+                                                                    label = "Seleccione Directorio", 
+                                                                    title = "Please select a folder",
+                                                                    style = "background-color: black;
+                                                                             font-family: sans serif;
+                                                                             font-size: 15px;
+                                                                             color: white;
+                                                                             box-shadow: 5px 5px 5px grey;
+                                                                             border-radius: 5px")
+                                         ),
+                                     
+                                     br(),
+                                     
                               div(br(style = "line-height: 200px;"),
+                                  
                                   align = "center",
-                                  shiny::numericInput(inputId = "experimento",
-                                                      label = "Experimento No.", 
-                                                      value = 0,
-                                                      min = 0,
-                                                      width = "75px"),
+                                  
+                                  # shinyFiles::shinyDirButton('directory', 'Folder select', 'Please select a folder'),
+                                  # 
+                                  # br(),
+                                  # 
+                                  
+                                  # Campo para ingresar numero de experimento ----
+                                  shinyjs::disabled(shiny::numericInput(inputId = "experimento",
+                                                                        label = "Experimento No.", 
+                                                                        value = 0,
+                                                                        min = 0,
+                                                                        width = "95px")),
                                   
                                   # Boton para crear experimento ----
-                                  shiny::actionButton(inputId = "CrearExperimento", 
-                                                      label = "Crear",
-                                                      style = "background-color: black;
-                                                               font-family: sans serif;
-                                                               font-size: 15px;
-                                                               color: white;
-                                                               box-shadow: 5px 5px 5px grey;
-                                                               border-radius: 5px",
-                                                      size = "sm"),
+                                  shinyjs::disabled(shiny::actionButton(inputId = "CrearExperimento", 
+                                                                        label = "Crear",
+                                                                        style = "background-color: black;
+                                                                                 font-family: sans serif;
+                                                                                 font-size: 15px;
+                                                                                 color: white;
+                                                                                 box-shadow: 5px 5px 5px grey;
+                                                                                 border-radius: 5px",
+                                                                        size = "sm")
+                                                    ),
                                   
                                   span(style = "font-size: 13px; 
                                                 color: black;
@@ -271,35 +313,45 @@ app_ui <- function(request) {
                                                                                  box-shadow: 5px 5px 5px grey;
                                                                                  border-radius: 5px",
                                                                         size = "sm")
-                                                    ),
+                                                    )
+                                  ),
                                   
                                   hr(style = "box-shadow: 2px 2px 2px blue;"),
                                   
-                                  shinyjs::disabled(shiny::radioButtons(inputId = "setType",
-                                                                        label = "Set",
-                                                                        choices = c("Train" = "train",
-                                                                                    "Validation" = "validation",
-                                                                                    "Test" = "test")
-                                                                        )
-                                                    )
-                              ),
+                                  # Botones para escoger typeSet ----
+                                  div(align = "center",
+                                      
+                                      # div(style = "width: 25px;",
+                                      
+                                      shinyjs::disabled(shiny::radioButtons(inputId = "setType",  # shiny::radioButtons
+                                                                            label = "Set",
+                                                                            inline = TRUE,
+                                                                            choices = c("Entrenamiento" = "train",
+                                                                                        "Validación" = "validation",
+                                                                                        "Test" = "test")
+                                                                            )
+                                                        )
+                                      # )
+                                      ),
                               
                               hr(style = "box-shadow: 2px 2px 2px blue;"),
                               
                               # Boton para tomar Burst-Snapshot ----
                               div(br(style = "line-height: 200px;"),
+                                  
                                   align = "center",
-                                  shiny::actionButton(inputId = "BurstSnapshot", 
-                                                      label = "",
-                                                      style = "background-color: black; 
-                                                               font-family: sans serif; 
-                                                               font-size: 35px; 
-                                                               color: white;
-                                                               box-shadow: 5px 5px 5px grey;
-                                                               border-radius: 15px",
-                                                      icon = icon("images"),
-                                                      size = "lg",
-                                                      onclick = "start_snapping()"),
+                                  
+                                  shinyjs::disabled(shiny::actionButton(inputId = "BurstSnapshot", 
+                                                                        label = "",
+                                                                        style = "background-color: black; 
+                                                                                 font-family: sans serif; 
+                                                                                 font-size: 35px; 
+                                                                                 color: white;
+                                                                                 box-shadow: 5px 5px 5px grey;
+                                                                                 border-radius: 15px",
+                                                                        icon = icon("images"),
+                                                                        size = "lg",
+                                                                        onclick = "start_snapping()")),
                                   
                                   
                                   span(style = "font-size: 13px; 
@@ -339,187 +391,238 @@ app_ui <- function(request) {
                                                                         size = "lg",
                                                                         onclick = "take_snapshot()")
                                                     )
+                                  ),
+                              
+                              hr(style = "box-shadow: 2px 2px 2px blue;"),
+                              
+                              div(align = "right",
+                                  shiny::actionButton(inputId = "saveAnnotations",
+                                                  label = "",
+                                                  style = "background-color: black; 
+                                                               font-family: sans serif;
+                                                               color: white;
+                                                               box-shadow: 5px 5px 5px grey;
+                                                               border-radius: 3px",
+                                                  icon = icon("save"),
+                                                  size = "sm")),
+                              
+                              # Area de anotaciones ----
+                              div(br(style = "line-height: 200px;"),
+                                  
+                                  align = "center",
+                                  
+                                  shiny::textAreaInput(inputId = "annotations",
+                                                       label = "Anotaciones", 
+                                                       value = "", 
+                                                       width = '500px',
+                                                       height = '150px',
+                                                       placeholder = NULL),
+                                  # shiny::actionButton(inputId = "saveAnnotations",
+                                  #                     label = "",
+                                  #                     style = "background-color: black; 
+                                  #                              font-family: sans serif;
+                                  #                              color: white;
+                                  #                              box-shadow: 5px 5px 5px grey;
+                                  #                              border-radius: 7px",
+                                  #                     icon = icon("save"),
+                                  #                     size = "sm")
                                   )
                               
-                            ),
-                            
-                            shiny::mainPanel(
-                              shiny::column(width = 5,
-                                     offset = 1,
-                                     
-                                     div(style = "box-shadow: 5px 5px 5px grey;
-                                                  border-radius: 25px;",
-                                         
-                                         br(),
-                                         
-                                         align = "center",
-                                         
-                                         shinyWidgets::switchInput(inputId = "OnOffCam1",
-                                                                   # label = "On-Off Camara 1",
-                                                                   onStatus = NULL,
-                                                                   offStatus = NULL,
-                                                                   size = "mini",
-                                                                   inline = TRUE),
-                                         # actionButton(inputId = "OnCam1",
-                                         #              label = "",
-                                         #              style = "background-color: transparent;
-                                         #                       border-color: transparent;
-                                         #                       font-family: sans serif;
-                                         #                       font-size: 15px;
-                                         #                       color: white;
-                                         #                       border-radius: 5px",
-                                         #              icon = icon("toggle-on"),
-                                         #              size = "sm"),
-                                         # actionButton(inputId = "OffCam1",
-                                         #              label = "",
-                                         #              style = "background-color: transparent;
-                                         #                       border-color: transparent;
-                                         #                       font-family: sans serif;
-                                         #                       font-size: 15px;
-                                         #                       color: white;
-                                         #                       border-radius: 5px",
-                                         #              icon = icon("toggle-off"),
-                                         #              size = "sm"),
-                                         actionButton(inputId = "cam1Settings",
-                                                      label = "",
-                                                      style = "background-color: transparent;
-                                                               border-color: transparent;
-                                                               font-family: sans serif;
-                                                               font-size: 15px;
-                                                               color: white;
-                                                               border-radius: 5px",
-                                                      icon = icon("sliders"),
-                                                      size = "sm"),
-                                         div(style = "border-radius: 25px;
-                                                      height: 215px;
-                                                      width: 235px;",
-                                             uiOutput("cam1")),
-                                         # showWebcam(cameraWidth, cameraHeight, cameraQuality),
-                                         
-                                         # br(),
-                                         # br(),
-                                         # br(),
-                                         # br(),
-                                         # br(),
-                                         
-                                         shinyWidgets::switchInput(inputId = "OnOffCam2",
-                                                                   # label = "On-Off Camara 2",
-                                                                   onStatus = NULL,
-                                                                   offStatus = NULL,
-                                                                   size = "mini",
-                                                                   inline = TRUE),
-                                         # actionButton(inputId = "OnCam2",
-                                         #              label = "",
-                                         #              style = "background-color: transparent;
-                                         #                       border-color: transparent;
-                                         #                       font-family: sans serif;
-                                         #                       font-size: 15px;
-                                         #                       color: white;
-                                         #                       border-radius: 5px",
-                                         #              icon = icon("toggle-on"),
-                                         #              size = "sm"),
-                                         # actionButton(inputId = "OffCam2",
-                                         #              label = "",
-                                         #              style = "background-color: transparent;
-                                         #                       border-color: transparent;
-                                         #                       font-family: sans serif;
-                                         #                       font-size: 15px;
-                                         #                       color: white;
-                                         #                       border-radius: 5px",
-                                         #              icon = icon("toggle-off"),
-                                         #              size = "sm"),
-                                         actionButton(inputId = "cam2Settings",
-                                                      label = "",
-                                                      style = "background-color: transparent;
-                                                               border-color: transparent;
-                                                               font-family: sans serif;
-                                                               font-size: 15px;
-                                                               color: white;
-                                                               border-radius: 5px",
-                                                      icon = icon("sliders"),
-                                                      size = "sm"),
-                                         div(style = "border-radius: 25px;
-                                                      height: 215px;
-                                                      width: 235px;",
-                                             uiOutput("cam2")),
-                                         # showWebcam2(cameraWidth, cameraHeight, cameraQuality),
-                                         
-                                         # br(),
-                                         
-                                         # Campo para ingresar la etiqueta ----
-                                         div(align = "center",
-                                             style = "color: black; 
-                                                      font-family: sans serif;
-                                                      text-shadow: 3px 3px 4px grey;",
-                                             
-                                             shinyjs::disabled(shiny::selectizeInput(inputId = "etiqueta",
-                                                                                     label = strong("Ingresar Etiqueta"),
-                                                                                     choices = c("", lista_articulos$objeto),
-                                                                                     width = '80%',
-                                                                                     options = list(placeholder = "--> etiqueta <--",
-                                                                                                    create = TRUE)
-                                                                                     )
-                                                               ),
-                                             
-                                             tags$style(type="text/css",
-                                                        "#etiqueta {text-align:center;
-                                                                    font-family: sans serif; 
-                                                                    font-style: italic;
-                                                                    display: block;}")
-                                         ),
-                                         
-                                         # br(),
-                                         
-                                         # Contador para Single-Snapshot y Burst-Snapshot ----
-                                         div(align = "center",
-                                             style = "color: black;",
-                                             shiny::verbatimTextOutput(outputId = "photoCounter"),
-                                             tags$style("#photoCounter {text-align: center; 
-                                                                        color: black; 
-                                                                        font-family: sans serif; 
-                                                                        font-size:12px; 
-                                                                        font-style: bold; 
-                                                                        overflow-y: scroll; 
-                                                                        max-height: 80px; 
-                                                                        max-width: 70px; 
-                                                                        background: white;
-                                                                        border-radius: 5px}")
-                                         ),
-                                         
-                                         style = "height:710px;
-                                                  width:290px;
-                                                  background-image: linear-gradient(#000000, #b4b4b4);"
-                                     )
-                              ),
                               
+                              
+                            ), # end sidebarPanel
+                            
+                            # MainPanel App ----
+                            shiny::mainPanel(
+                              
+                              # Columna central App ----
+                              shiny::column(width = 5,
+                                            offset = 1,
+                                     
+                                            div(style = "box-shadow: 5px 5px 5px grey;
+                                                         border-radius: 25px;",
+                                         
+                                            br(),
+                                         
+                                            align = "center",
+                                         
+                                            # Boton para encender-apagar camara 1 ----
+                                            shinyWidgets::switchInput(inputId = "OnOffCam1",
+                                                                      # label = "On-Off Camara 1",
+                                                                      onStatus = NULL,
+                                                                      offStatus = NULL,
+                                                                      size = "mini",
+                                                                      inline = TRUE),
+                                           # actionButton(inputId = "OnCam1",
+                                           #              label = "",
+                                           #              style = "background-color: transparent;
+                                           #                       border-color: transparent;
+                                           #                       font-family: sans serif;
+                                           #                       font-size: 15px;
+                                           #                       color: white;
+                                           #                       border-radius: 5px",
+                                           #              icon = icon("toggle-on"),
+                                           #              size = "sm"),
+                                           # actionButton(inputId = "OffCam1",
+                                           #              label = "",
+                                           #              style = "background-color: transparent;
+                                           #                       border-color: transparent;
+                                           #                       font-family: sans serif;
+                                           #                       font-size: 15px;
+                                           #                       color: white;
+                                           #                       border-radius: 5px",
+                                           #              icon = icon("toggle-off"),
+                                           #              size = "sm"),
+                                         
+                                           # Boton para settings camara 1 ----
+                                           actionButton(inputId = "cam1Settings",
+                                                        label = "",
+                                                        style = "background-color: transparent;
+                                                                 border-color: transparent;
+                                                                 font-family: sans serif;
+                                                                 font-size: 15px;
+                                                                 color: white;
+                                                                 border-radius: 5px",
+                                                        icon = icon("sliders"),
+                                                        size = "sm"),
+                                         
+                                           # Lugar para mostrar la imagen de la camara 1 ----
+                                           div(style = "border-radius: 25px;
+                                                        height: 215px;
+                                                        width: 235px;",
+                                               uiOutput("cam1")),
+                                           # showWebcam(cameraWidth, cameraHeight, cameraQuality),
+                                         
+                                           # br(),
+                                           # br(),
+                                           # br(),
+                                           # br(),
+                                           # br(),
+                                         
+                                           # Boton para encender-apagar camara 2 ----
+                                           shinyWidgets::switchInput(inputId = "OnOffCam2",
+                                                                     # label = "On-Off Camara 2",
+                                                                     onStatus = NULL,
+                                                                     offStatus = NULL,
+                                                                     size = "mini",
+                                                                     inline = TRUE),
+                                           # actionButton(inputId = "OnCam2",
+                                           #              label = "",
+                                           #              style = "background-color: transparent;
+                                           #                       border-color: transparent;
+                                           #                       font-family: sans serif;
+                                           #                       font-size: 15px;
+                                           #                       color: white;
+                                           #                       border-radius: 5px",
+                                           #              icon = icon("toggle-on"),
+                                           #              size = "sm"),
+                                           # actionButton(inputId = "OffCam2",
+                                           #              label = "",
+                                           #              style = "background-color: transparent;
+                                           #                       border-color: transparent;
+                                           #                       font-family: sans serif;
+                                           #                       font-size: 15px;
+                                           #                       color: white;
+                                           #                       border-radius: 5px",
+                                           #              icon = icon("toggle-off"),
+                                           #              size = "sm"),
+                                         
+                                           # Boton para settings camara 2 ----
+                                           actionButton(inputId = "cam2Settings",
+                                                        label = "",
+                                                        style = "background-color: transparent;
+                                                                 border-color: transparent;
+                                                                 font-family: sans serif;
+                                                                 font-size: 15px;
+                                                                 color: white;
+                                                                 border-radius: 5px",
+                                                        icon = icon("sliders"),
+                                                        size = "sm"),
+                                         
+                                           # Lugar para mostrar la imagen de la camara 2 ----
+                                           div(style = "border-radius: 25px;
+                                                        height: 215px;
+                                                        width: 235px;",
+                                               uiOutput("cam2")),
+                                           # showWebcam2(cameraWidth, cameraHeight, cameraQuality),
+                                         
+                                           # br(),
+                                         
+                                           # Campo para ingresar la etiqueta ----
+                                           div(align = "center",
+                                               style = "color: black; 
+                                                        font-family: sans serif;
+                                                        text-shadow: 3px 3px 4px grey;",
+                                             
+                                               shinyjs::disabled(shiny::selectizeInput(inputId = "etiqueta",
+                                                                                       label = strong("Ingresar Etiqueta"),
+                                                                                       choices = c("", lista_articulos$objeto),
+                                                                                       width = '80%',
+                                                                                       options = list(placeholder = "--> etiqueta <--",
+                                                                                                      create = TRUE)
+                                                                                       )
+                                                                 ),
+                                             
+                                               tags$style(type="text/css",
+                                                          "#etiqueta {text-align:center;
+                                                                      font-family: sans serif; 
+                                                                      font-style: italic;
+                                                                      display: block;}")
+                                           ),
+                                         
+                                           # br(),
+                                         
+                                           # Contador para Single-Snapshot y Burst-Snapshot ----
+                                           div(align = "center",
+                                               style = "color: black;",
+                                               shiny::verbatimTextOutput(outputId = "photoCounter"),
+                                               tags$style("#photoCounter {text-align: center; 
+                                                                          color: black; 
+                                                                          font-family: sans serif; 
+                                                                          font-size:12px; 
+                                                                          font-style: bold; 
+                                                                          overflow-y: scroll; 
+                                                                          max-height: 80px; 
+                                                                          max-width: 70px; 
+                                                                          background: white;
+                                                                          border-radius: 5px}")
+                                           ),
+                                         
+                                           style = "height:710px;
+                                                    width:290px;
+                                                    background-image: linear-gradient(#000000, #b4b4b4);"
+                                       )
+                                ),
+                              
+                              # Columna derecha App ----
                               shiny::column(width = 6,
                                      
                                      br(),
                                      br(),
                                      
                                      shinyjs::hidden(shiny::textInput(inputId = 'placeholder64',
-                                                      label = '',
-                                                      value = "not_valid")),
+                                                                      label = '',
+                                                                      value = "not_valid")),
                                      
                                      shinyjs::hidden(shiny::textInput(inputId = 'placeholder642',
-                                                      label = '',
-                                                      value = "not_valid")),
+                                                                      label = '',
+                                                                      value = "not_valid")),
                                      
                                      shinyjs::hidden(shiny::textInput(inputId = 'burstplaceholder64',
-                                                      label = '',
-                                                      value = "not_valid")), 
+                                                                      label = '',
+                                                                      value = "not_valid")), 
                                      
                                      shinyjs::hidden(shiny::textInput(inputId = 'burstplaceholder642',
-                                                      label = '',
-                                                      value = "not_valid")), 
+                                                                      label = '',
+                                                                      value = "not_valid")), 
                                      
                                      shinyjs::hidden(shiny::textInput(inputId = 'results',
-                                                      label = '',
-                                                      value = "not_valid")), 
+                                                                      label = '',
+                                                                      value = "not_valid")), 
                                      
                                      shinyjs::hidden(shiny::textInput(inputId = 'results2',
-                                                      label = '',
-                                                      value = "not_valid")),
+                                                                      label = '',
+                                                                      value = "not_valid")),
                                      
                                      
                                      # Un lugar donde mostrar las snapshot cam1 + cam2 ----
@@ -541,8 +644,8 @@ app_ui <- function(request) {
                                        br(style = "line-height: 12px;"),
                                        
                                        shiny::plotOutput(outputId = "imagenCam1",
-                                                  width = "224px", 
-                                                  height = "224px"),
+                                                         width = "224px", 
+                                                         height = "224px"),
                                        shinyjs::hidden(img(id = 'imageprev')),
                                        
                                        br(style = "line-height: 32px;"),
@@ -558,17 +661,16 @@ app_ui <- function(request) {
                                        br(style = "line-height: 12px;"),
                                        
                                        shiny::plotOutput(outputId = "imagenCam2",
-                                                  width = "224px", 
-                                                  height = "210px"),
+                                                         width = "224px", 
+                                                         height = "210px"),
                                        shinyjs::hidden(img(id = 'imageprev2'))
                                        
-                                     )
+                                     ) # end lugar donde mostrar las snapshot cam1 + cam2
                                      
-                              )
-                            )
-                          )
-                        )
-                 ,
+                              ) # end columna derecha
+                            ) # end mainPanel
+                          ) # end sidebarLayout
+                        ), # end TAB 1: captura de imagenes
                  
                  # Espacios en blanco en encabezado ----
                  # tags$head(tags$script(type="text/javascript", src = "code.js")),
@@ -579,16 +681,65 @@ app_ui <- function(request) {
                  # Estilo para los tags
                  # tags$head(tags$style(HTML('.navbar-brand {width: 400px; font-size:35px; text-align:center;}'))),
                  
+                 # TAB 2: Boton cerrar ventana y cerar sesion de R ----
                  shiny::tabPanel(title = "", value = "Stop", icon = icon("power-off"))
                  
-                
-      )
-    )
-  )
-}
+                 
+      ) # end navbarPage
+    ) # end fluidPage
+  ) # end tagList
+} # end app_ui
 
-######## shinymanager
-app_ui <- shinymanager::secure_app(app_ui, enable_admin = TRUE)
+# shinyManager secure_app ----
+app_ui <- shinymanager::secure_app(app_ui,
+                                   head_auth = tags$div(shinyjs::useShinyjs(),
+                                                        shinyjs::extendShinyjs(text = jscode, functions = c("closeWindow"))),
+                                   status = "default",
+                                   theme = shinythemes::shinytheme("cosmo"),
+                                   tags_top = tags$div(
+                                                       tags$h2("snapShooteR ", 
+                                                               style = "align:center;
+                                                                        font-family: sans serif;
+                                                                        text-shadow: 5px 5px 5px grey;
+                                                                        font-size:55px;",
+                                                            span(style = "font-size: 18px;
+                                                                          font-family: sans serif;
+                                                                          color: grey;",
+                                                                 "by AiLab UBB")
+                                                            )
+                                                       ),
+                                   tags_bottom = tags$div(
+                                                          actionButton(inputId = "authStop",
+                                                                                label ="",
+                                                                                style = "float: right;
+                                                                                 border-radius: 5px;
+                                                                                 background-color: red;
+                                                                                 border-color: transparent;
+                                                                                 font-size: 10px",
+                                                                                icon = icon("power-off")),
+                                                          # tags$style("#authStop {float: right;
+                                                          #                        border-radius: 5px;
+                                                          #                        background-color: red;
+                                                          #                        border-color: transparent;
+                                                          #                        font-size: 10px}"),
+                                                          tags$p(
+                                                            "Si tienes problemas con la aplicación, envía un mail al ",
+                                                            tags$a(
+                                                              href = "mailto:maalid@gmail.com?Subject=snapShooteR%20Manager",
+                                                              target="_top", "administrador."
+                                                              )
+                                                            ),
+                                                          tags$br(),
+                                                          tags$p("AiLab UBB - 2020",
+                                                                 style = "text-align:center;
+                                                                          font-family: sans serif;
+                                                                          font-weight: bold;
+                                                                          color: grey;
+                                                                          font-size:10px")
+                                                          ),
+                                   enable_admin = TRUE,
+                                   background  = "linear-gradient(#000000, #b4b4b4)")
+
 
 #' Add external Resources to the Application
 #' 

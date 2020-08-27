@@ -15,24 +15,24 @@ app_server <- function( input, output, session ) {
   ######## shinymanager
   # check_credentials directly on sqlite db
   res_auth <- shinymanager::secure_server(
-    check_credentials = shinymanager::check_credentials(
-      # credentials
-      db = system.file("app/db/db1.sqlite", package = "snapShooteR"),
-      # passphrase = key_get("R-shinymanager-key", "obiwankenobi")
-      passphrase = "passphrase"
+    check_credentials = shinymanager::check_credentials(# credentials
+                                                        db = system.file("app/db/db1.sqlite", package = "snapShooteR"),
+                                                        # passphrase = key_get("R-shinymanager-key", "obiwankenobi")
+                                                        passphrase = "passphrase"
+                                                        )
     )
-  )
+  
   observe({
     if(is.null(input$shinymanager_where) || (!is.null(input$shinymanager_where) && input$shinymanager_where %in% "application")){
   ######## shinymanager
   
   observeEvent(input$cam1Settings, {
-    pat <- system.file("app/webcamSettings", package = "snapShooteR")
-    shell(glue::glue("C: & cd {pat} & launchCam1.bat"))
+    webcamSettingsPath <- system.file("app/webcamSettings", package = "snapShooteR")
+    shell(glue::glue("C: & cd {webcamSettingsPat} & launchCam1.bat"))
   })
   observeEvent(input$cam2Settings, {
-    pat <- system.file("app/webcamSettings", package = "snapShooteR")
-    shell(glue::glue("C: & cd {pat} & launchCam2.bat"))
+    webcamSettingsPat <- system.file("app/webcamSettings", package = "snapShooteR")
+    shell(glue::glue("C: & cd {webcamSettingsPat} & launchCam2.bat"))
     # shell("C: & cd C:/Users/Admin/Downloads/webcam-settings-dialog-windows-master & launchCam2.bat")
   })
   
@@ -64,8 +64,20 @@ app_server <- function( input, output, session ) {
   #   output$cam2 <- renderUI({webCam2Off()})
   # })
   
-  
-  # para ver cambios en github
+  volumes <- c(Home = fs::path_home(), "R Installation" = R.home(), shinyFiles::getVolumes()())
+  shinyFiles::shinyDirChoose(input, "directory", roots = volumes, session = session, restrictions = system.file(package = "base"))
+  observeEvent(input$directory, {
+    
+    shinyjs::enable(id = "experimento")
+    shinyjs::enable(id = "CrearExperimento")
+    
+    shinyjs::disable(id = "directory")
+    
+    # workingFolderName <- shinyFiles::parseDirPath(volumes, input$directory)
+    # setwd(workingFolderName)
+    # cat("\ninput$directory value:\n\n")
+    print(shinyFiles::parseDirPath(volumes, input$directory))
+  })
   
   # CREAR FOLDERS ASOCIADOS A UN EXPERIMENTO ----     
   observeEvent(input$CrearExperimento, {
@@ -75,16 +87,23 @@ app_server <- function( input, output, session ) {
     
     shinyjs::enable(id = "etiqueta")
     
-    exp_number <- input$experimento
-    experimentFolderName <- glue::glue("experimento_{exp_number}")
-    imagenesFolderName <- "imagenes"
-    imagenesFolderPath <- glue::glue("experimento_{exp_number}/imagenes")
-    trainFolderPath <- glue::glue("experimento_{exp_number}/imagenes/train")
-    validationFolderPath <- glue::glue("experimento_{exp_number}/imagenes/validation")
-    testFolderPath <- glue::glue("experimento_{exp_number}/imagenes/test")
+    workingFolderName <- shinyFiles::parseDirPath(volumes, input$directory)
+    experimentFolderName <- "experimento"
+    experimentNumber <- input$experimento
+    experimentFolderPath <- glue::glue("{workingFolderName}/{experimentFolderName}_{experimentNumber}")
     
-    if(!dir.exists(experimentFolderName)){
-      dir.create(file.path(experimentFolderName))
+    imagenesFolderName <- "imagenes"
+    imagenesFolderPath <- glue::glue("{experimentFolderPath}/{imagenesFolderName}")
+    
+    trainFolderPath <- glue::glue("{imagenesFolderPath}/train")
+    validationFolderPath <- glue::glue("{imagenesFolderPath}/validation")
+    testFolderPath <- glue::glue("{imagenesFolderPath}/test")
+    
+    anotacionesFolderName <- "anotaciones"
+    anotacionesFolderPath <- glue::glue("{experimentFolderPath}/{anotacionesFolderName}")
+    
+    if(!dir.exists(experimentFolderPath)){
+      dir.create(file.path(experimentFolderPath))
     }
     
     if(!dir.exists(imagenesFolderPath)){
@@ -103,12 +122,20 @@ app_server <- function( input, output, session ) {
       dir.create(file.path(testFolderPath))
     }
     
+    if(!dir.exists(anotacionesFolderPath)){
+      dir.create(file.path(anotacionesFolderPath))
+    }
+    
+    shinyjs::disable(id = "directory")
+    
     shinyjs::disable(id = "experimento")
     shinyjs::disable(id = "CrearExperimento")
   })
   
   # HABILITAR O DESHABILITAR BOTONES AL CREAR NUEVO EXPERIMENTO ----   
   observeEvent(input$NuevoExperimento, {
+    
+    shinyjs::enable(id = "directory")
     
     shinyjs::enable(id = "experimento")
     shinyjs::enable(id = "CrearExperimento")
@@ -125,9 +152,9 @@ app_server <- function( input, output, session ) {
     # Resetear contador
     counter(0)
     
-    exp_number <- input$experimento + 1
+    experimentNumber <- input$experimento + 1
     
-    shiny::updateSelectInput(session, inputId = "experimento", selected = exp_number)
+    shiny::updateSelectInput(session, inputId = "experimento", selected = experimentNumber)
     shiny::updateSelectInput(session, inputId = "setType", selected = "train")
     shiny::updateSelectInput(session, inputId = "etiqueta", selected = "--> etiqueta <--")
     
@@ -164,6 +191,8 @@ app_server <- function( input, output, session ) {
     
     if(!identical(input$placeholder64,"not_valid")){
       
+      shinyjs::disable(id = "directory")
+      
       shinyjs::disable(id = "NuevoExperimento")
       shinyjs::disable(id = "setType")
       
@@ -181,21 +210,27 @@ app_server <- function( input, output, session ) {
       inconn2 <- stringr::str_remove(input$placeholder642,'data:image/jpeg;base64,')
       
       # Crear archivo donde guardar imagen
-      exp_number <- input$experimento
-      experimentFolderName <- glue::glue("experimento_{exp_number}")
-      set <- as.character(input$setType)
-      imagesPath <- glue::glue("{experimentFolderName}/imagenes/{set}/")
+      workingFolderName <- shinyFiles::parseDirPath(volumes, input$directory)
+      experimentFolderName <- "experimento"
+      experimentNumber <- input$experimento
+      experimentFolderPath <- glue::glue("{workingFolderName}/{experimentFolderName}_{experimentNumber}")
       
-      if (set == "train" | set == "validation") {
-        classFolderName <- glue::glue("{experimentFolderName}/imagenes/{set}/{photoLabel}/")
+      imagenesFolderName <- "imagenes"
+      imagenesFolderPath <- glue::glue("{experimentFolderPath}/{imagenesFolderName}")
+      
+      setFolderName <- as.character(input$setType)
+      imagesPath <- glue::glue("{imagenesFolderPath}/{setFolderName}/")
+      
+      if (setFolderName == "train" | setFolderName == "validation") {
+        classFolderName <- glue::glue("{imagesPath}/{photoLabel}/")
         if(!dir.exists(classFolderName)){
           dir.create(file.path(classFolderName))
         }
         
-        saveImagesPath <- glue::glue("{experimentFolderName}/imagenes/{set}/{photoLabel}/")
+        saveImagesPath <- classFolderName #glue::glue("{imagesPath}/{photoLabel}/")
       } 
       else {
-        saveImagesPath <- glue::glue("{experimentFolderName}/imagenes/test/")
+        saveImagesPath <- glue::glue("{imagenesFolderPath}/test/")
       }
       
       fileName_cam1 <- sprintf("%s_%s_%s_%s_%s",
@@ -267,6 +302,8 @@ app_server <- function( input, output, session ) {
       
       shinyjs::enable(id = "stop_BurstSnapshot")
       
+      shinyjs::disable(id = "directory")
+      
       shinyjs::disable(id = "NuevoExperimento")
       shinyjs::disable(id = "setType")
       
@@ -291,21 +328,27 @@ app_server <- function( input, output, session ) {
       inconn2 <- stringr::str_remove(input$burstplaceholder642,'data:image/jpeg;base64,')
       
       # Crear archivo donde guardar imagen
-      exp_number <- input$experimento
-      experimentFolderName <- glue::glue("experimento_{exp_number}")
-      set <- as.character(input$setType)
-      imagesPath <- glue::glue("{experimentFolderName}/imagenes/{set}/")
+      workingFolderName <- shinyFiles::parseDirPath(volumes, input$directory)
+      experimentFolderName <- "experimento"
+      experimentNumber <- input$experimento
+      experimentFolderPath <- glue::glue("{workingFolderName}/{experimentFolderName}_{experimentNumber}")
       
-      if (set == "train" | set == "validation") {
-        classFolderName <- glue::glue("{experimentFolderName}/imagenes/{set}/{photoLabel}/")
+      imagenesFolderName <- "imagenes"
+      imagenesFolderPath <- glue::glue("{experimentFolderPath}/{imagenesFolderName}")
+      
+      setFolderName <- as.character(input$setType)
+      imagesPath <- glue::glue("{imagenesFolderPath}/{setFolderName}/")
+      
+      if (setFolderName == "train" | setFolderName == "validation") {
+        classFolderName <- glue::glue("{imagesPath}/{photoLabel}/")
         if(!dir.exists(classFolderName)){
           dir.create(file.path(classFolderName))
         }
         
-        saveImagesPath <- glue::glue("{experimentFolderName}/imagenes/{set}/{photoLabel}/")
+        saveImagesPath <- classFolderName #glue::glue("{imagesPath}/{photoLabel}/")
       } 
       else {
-        saveImagesPath <- glue::glue("{experimentFolderName}/imagenes/test/")
+        saveImagesPath <- glue::glue("{imagenesFolderPath}/test/")
       }
       
       fileName_cam1 <- sprintf("%s_%s_%s_%s_%s",
@@ -364,6 +407,37 @@ app_server <- function( input, output, session ) {
     }
   })
   
+  # GUARDAR EN ARCHIVO DE TEXTO LAS ANOTACIONES ----
+  observeEvent(input$saveAnnotations, {
+    
+    workingFolderName <- shinyFiles::parseDirPath(volumes, input$directory)
+    experimentFolderName <- "experimento"
+    experimentNumber <- input$experimento
+    experimentFolderPath <- glue::glue("{workingFolderName}/{experimentFolderName}_{experimentNumber}")
+    
+    anotacionesFolderName <- "anotaciones"
+    anotacionesFolderPath <- glue::glue("{experimentFolderPath}/{anotacionesFolderName}")
+    
+    anotacionesFileName <- glue::glue("anotaciones_{experimentFolderName}_{experimentNumber}")
+    anotacionesFilePath <- glue::glue("{anotacionesFolderPath}/{anotacionesFileName}")
+    
+    if(!dir.exists(anotacionesFolderPath)){
+      dir.create(file.path(anotacionesFolderPath))
+    }
+    
+    myAnnotations <- input$annotations
+    
+    utils::write.table(myAnnotations, 
+                       file = glue::glue("{anotacionesFilePath}.txt"), 
+                       sep = "", 
+                       col.names = FALSE, 
+                       row.names = FALSE,
+                       quote = FALSE)
+    
+    
+  })
+  
+  
   # HABILITAR O DESHABILITAR BOTONES APRETAR BOTON stop_BurstSnapshot ----     
   observeEvent(input$stop_BurstSnapshot, {
     
@@ -382,7 +456,7 @@ app_server <- function( input, output, session ) {
     
     shinyjs::enable(id = "etiqueta")
     
-    exp_number <- input$experimento
+    # experimentNumber <- input$experimento
     
   })
   
@@ -392,7 +466,7 @@ app_server <- function( input, output, session ) {
     # Resetear contador
     counter(0)
     
-    updateSelectInput(session, inputId = "setType", selected = "train")
+    updateSelectInput(session, inputId = "setType", selected = "train") # updateSelectInput
   })
   
   observe({
@@ -403,6 +477,13 @@ app_server <- function( input, output, session ) {
   })
   
   ######## shinymanager
+    }
+  })
+  
+  observe({
+    if (!is.null(input$authStop) && input$authStop == 1) {
+    shinyjs::js$closeWindow()
+    stopApp()
     }
   })
   ######## shinymanager
