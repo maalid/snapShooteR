@@ -8,11 +8,13 @@
 run_app <- function(
   ...
 ) {
+  source(system.file("global.R", package = "snapSooteR"))
   with_golem_options(
     app = shinyApp(
       ui = app_ui, 
-      server = app_server,
-      onStart = purrr::partial(eval, expr = global, envir = globalenv())
+      server = app_server
+      # ,
+      # onStart = purrr::partial(eval, expr = global, envir = globalenv())
     ), 
     golem_opts = list(...)
   )
