@@ -13,6 +13,14 @@ app_server <- function( input, output, session ) {
   # })
   
   ######## shinymanager
+  # shinyManager setLabels
+  shinymanager::set_labels(
+    language = "en",
+    "Please authenticate" = "",
+    "Username:" = "nombre de usuario:",
+    "Password:" = "clave de acceso:"
+  )
+  
   # check_credentials directly on sqlite db
   res_auth <- shinymanager::secure_server(
     check_credentials = shinymanager::check_credentials(# credentials
@@ -85,6 +93,8 @@ app_server <- function( input, output, session ) {
     shinyjs::enable(id = "NuevoExperimento")
     shinyjs::enable(id = "setType")
     
+    shinyjs::enable(id = "saveAnnotations")
+    
     shinyjs::enable(id = "etiqueta")
     
     workingFolderName <- shinyFiles::parseDirPath(volumes, input$directory)
@@ -142,6 +152,8 @@ app_server <- function( input, output, session ) {
     
     shinyjs::disable(id = "NuevoExperimento")
     shinyjs::disable(id = "setType")
+    
+    shinyjs::disable(id = "saveAnnotations")
     
     shinyjs::disable(id = "BurstSnapshot")
     shinyjs::disable(id = "stop_BurstSnapshot")

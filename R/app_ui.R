@@ -396,15 +396,15 @@ app_ui <- function(request) {
                               hr(style = "box-shadow: 2px 2px 2px blue;"),
                               
                               div(align = "right",
-                                  shiny::actionButton(inputId = "saveAnnotations",
-                                                  label = "",
-                                                  style = "background-color: black; 
-                                                           font-family: sans serif;
-                                                           color: white;
-                                                           box-shadow: 5px 5px 5px grey;
-                                                           border-radius: 3px",
-                                                  icon = icon("save"),
-                                                  size = "sm")),
+                                  shinyjs::disabled(shiny::actionButton(inputId = "saveAnnotations",
+                                                                        label = "",
+                                                                        style = "background-color: black; 
+                                                                                 font-family: sans serif;
+                                                                                 color: white;
+                                                                                 box-shadow: 5px 5px 5px grey;
+                                                                                 border-radius: 3px",
+                                                                        icon = icon("save"),
+                                                                        size = "sm"))),
                               
                               # Area de anotaciones ----
                               div(br(style = "line-height: 200px;"),
@@ -692,11 +692,12 @@ app_ui <- function(request) {
 
 # shinyManager secure_app ----
 app_ui <- shinymanager::secure_app(app_ui,
-                                   head_auth = tags$div(shinyjs::useShinyjs(),
-                                                        shinyjs::extendShinyjs(text = jscode, functions = c("closeWindow"))),
+                                   # head_auth = tags$div(shinyjs::useShinyjs(),
+                                   #                      shinyjs::extendShinyjs(text = jscode, functions = c("closeWindow"))),
                                    status = "default",
                                    theme = shinythemes::shinytheme("cosmo"),
-                                   tags_top = tags$div(
+                                   tags_top = tags$div(shinyjs::useShinyjs(),
+                                                       shinyjs::extendShinyjs(text = jscode, functions = c("closeWindow")),
                                                        tags$h2("snapShooteR ", 
                                                                style = "align:center;
                                                                         font-family: sans serif;

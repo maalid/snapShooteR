@@ -8,7 +8,6 @@
 run_app <- function(
   ...
 ) {
-  source(system.file("global.R", package = "snapSooteR"))
   with_golem_options(
     app = shinyApp(
       ui = app_ui, 
