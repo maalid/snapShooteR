@@ -6,12 +6,12 @@
 #' @noRd
 
 # shinyManager setLabels ----
-shinymanager::set_labels(
-  language = "en",
-  "Please authenticate" = "",
-  "Username:" = "nombre de usuario:",
-  "Password:" = "clave de acceso:"
-)
+# shinymanager::set_labels(
+#   language = "en",
+#   "Please authenticate" = "",
+#   "Username:" = "nombre de usuario:",
+#   "Password:" = "clave de acceso:"
+# )
 
 # shinyManager credential ----
 # credentials <- data.frame(
