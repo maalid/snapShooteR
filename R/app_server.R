@@ -41,9 +41,12 @@ app_server <- function( input, output, session ) {
     # camNames <- system(glue::glue('{webcamSettingsPath} & chcp 65001 > nul & ffmpeg -list_devices true -f dshow -i dummy -hide_banner'), intern = TRUE)
     # cam1Name <- substr(camNames[[3]], start = 50, stop = nchar(camNames[[3]]) - 1)
     # system(glue::glue('{webcamSettingsPath} & ffmpeg -f dshow -show_video_device_dialog true -video_pin_name 1 -i video="{cam1Name}"'), wait = FALSE)
-    camNames <- system(paste(glue::glue('{webcamSettingsPath}/ffmpeg.exe ffmpeg -list_devices true -f dshow -i dummy -hide_banner')), intern = TRUE)
+    camNames <- system(paste(glue::glue('"{webcamSettingsPath}/ffmpeg.exe"'), 'ffmpeg -list_devices true -f dshow -i dummy -hide_banner'), intern = TRUE)
     cam1Name <- substr(camNames[[3]], start = 50, stop = nchar(camNames[[3]]) - 1)
-    system(paste(glue::glue('{webcamSettingsPath}/ffmpeg.exe & chcp 65001 > nul & ffmpeg -f dshow -show_video_device_dialog true -video_pin_name 2 -i video="{cam1Name}"')),
+    system(sprintf("%s %s %s", 
+                   glue::glue('"{webcamSettingsPath}/ffmpeg.exe"'), 
+                   'chcp 65001 > nul', 
+                   glue::glue('ffmpeg -f dshow -show_video_device_dialog true -video_pin_name 2 -i video="{cam1Name}"')),
            wait = FALSE,
            invisible = FALSE,
            # # intern = TRUE,
@@ -60,7 +63,10 @@ app_server <- function( input, output, session ) {
     # shell(glue::glue('C: & cd {webcamSettingsPath} & ffmpeg -f dshow -show_video_device_dialog true -video_pin_name 2 -i video="{cam2Name}"'), wait = FALSE)
     camNames <- system(paste(glue::glue('{webcamSettingsPath}/ffmpeg.exe ffmpeg -list_devices true -f dshow -i dummy -hide_banner')), intern = TRUE)
     cam2Name <- substr(camNames[[5]], start = 50, stop = nchar(camNames[[5]]) - 1)
-    system(paste(glue::glue('{webcamSettingsPath}/ffmpeg.exe & ffmpeg -f dshow -show_video_device_dialog true -video_pin_name 2 -i video="{cam2Name}"')),
+    system(sprintf("%s %s %s", 
+                   glue::glue('"{webcamSettingsPath}/ffmpeg.exe"'), 
+                   'chcp 65001 > nul', 
+                   glue::glue('ffmpeg -f dshow -show_video_device_dialog true -video_pin_name 2 -i video="{cam2Name}"')),
            wait = FALSE,
            invisible = FALSE,
            # # intern = TRUE,
