@@ -61,7 +61,7 @@ app_server <- function( input, output, session ) {
     #        # ignore.stdout = T,
     #        # show.output.on.console = F,
     #        minimized = TRUE)
-    system(paste('guvcview --control_only'))
+    system(paste('guvcview --control_panel'))
   })
   observeEvent(input$cam2Settings, {
     # # # # shell("C: & cd C:/Users/Admin/Downloads/webcam-settings-dialog-windows-master & launchCam2.bat")
