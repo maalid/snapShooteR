@@ -12,7 +12,7 @@ app_server <- function( input, output, session ) {
   #   py$cam1Settings()
   # })
   
-  ######## shinymanager
+  ######## shinymanager 
   # shinyManager setLabels
   shinymanager::set_labels(
     language = "en",
